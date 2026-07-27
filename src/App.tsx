@@ -217,7 +217,7 @@ export default function App() {
                 <strong>ILUSTRACAO 1:</strong>
                 <div className="illustration illustration--small"><DxfPreview model={model} mode="overview" /></div>
                 <strong>ILUSTRACAO 2:</strong>
-                <div className="illustration illustration--large"><DxfPreview model={model} mode="detail" showLabels /></div>
+                <div className="illustration illustration--large"><DxfPreview model={model} mode="detail" showLabels rotationDegrees={-22} /></div>
               </div>
 
               <div className="treatment-report">
