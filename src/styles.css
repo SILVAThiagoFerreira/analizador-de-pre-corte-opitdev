@@ -104,14 +104,27 @@ input:focus, select:focus, button:focus-visible { outline: 2px solid rgba(237, 2
   font-weight: 800;
 }
 .actions .primary { background: #ed1c24; border-color: #ed1c24; color: #fff; }
+.table-editor__scroll {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
 .row-editor {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: 62px 100px 108px 112px 118px 166px 184px 38px;
   gap: 6px;
   margin-top: 8px;
+  min-width: 930px;
 }
 .row-editor input, .row-editor select { min-height: 34px; padding: 6px 8px; }
 .row-editor input::placeholder { color: #7b8790; opacity: 1; font-size: 11px; }
+.row-editor--head { margin-top: 12px; align-items: end; }
+.row-editor--head span {
+  color: #506171;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
 .icon-button { padding: 0 !important; }
 .actions { margin-top: 18px; justify-content: flex-end; }
 
@@ -213,7 +226,6 @@ input:focus, select:focus, button:focus-visible { outline: 2px solid rgba(237, 2
   .topbar strong { font-size: 14px; }
   .panel-title .status-dot { position: static; margin-bottom: 10px; }
   h1 { font-size: 18px; }
-  .row-editor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .summary-strip { grid-template-columns: 1fr; }
 }
 

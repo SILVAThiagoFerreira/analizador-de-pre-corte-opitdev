@@ -169,24 +169,36 @@ export default function App() {
                 <Plus size={16} /> Adicionar
               </button>
             </div>
-            {rows.map((row, index) => (
-              <div className="row-editor" key={index}>
-                <input aria-label="ID" placeholder="ID" value={row.id} onChange={(event) => updateRow(index, { id: event.target.value })} />
-                <select aria-label="Ação" value={row.action} onChange={(event) => updateRow(index, { action: event.target.value as TreatmentRow["action"] })}>
-                  <option value="fill">Aterrar</option>
-                  <option value="suspend">Suspender</option>
-                  <option value="cancel">Cancelar</option>
-                </select>
-                <input aria-label="Preencher metros" title="Preencher (m)" placeholder="Aterrar (m)" type="number" min="0" step="0.1" value={row.fillMeters} onChange={(event) => updateRow(index, { fillMeters: event.target.value === "" ? "" : Number(event.target.value) })} />
-                <input aria-label="Material" placeholder="Material" value={row.material} onChange={(event) => updateRow(index, { material: event.target.value })} />
-                <input aria-label="Altura" title="Altura (m)" placeholder="Suspender (m)" type="number" min="0" step="0.1" value={row.suspendHeight} onChange={(event) => updateRow(index, { suspendHeight: event.target.value === "" ? "" : Number(event.target.value) })} />
-                <input aria-label="Carregar somente metros" title={appConfig.labels.loadOnlyMeters} placeholder="Carregar (m)" type="number" min="0" step="0.1" value={row.loadOnlyMeters} onChange={(event) => updateRow(index, { loadOnlyMeters: event.target.value === "" ? "" : Number(event.target.value) })} />
-                <input aria-label="Tampão personalizado metros" title={appConfig.labels.customStemmingMeters} placeholder="Tampão (m)" type="number" min="0" step="0.1" value={row.customStemmingMeters} onChange={(event) => updateRow(index, { customStemmingMeters: event.target.value === "" ? "" : Number(event.target.value) })} />
-                <button type="button" className="icon-button" aria-label="Remover" onClick={() => setRows(rows.filter((_, rowIndex) => rowIndex !== index))}>
-                  <Trash2 size={16} />
-                </button>
+            <div className="table-editor__scroll">
+              <div className="row-editor row-editor--head" aria-hidden="true">
+                <span>ID</span>
+                <span>Ação</span>
+                <span>Preencher (m)</span>
+                <span>Material</span>
+                <span>Suspender (m)</span>
+                <span>{appConfig.labels.loadOnlyMeters}</span>
+                <span>{appConfig.labels.customStemmingMeters}</span>
+                <span>Excluir</span>
               </div>
-            ))}
+              {rows.map((row, index) => (
+                <div className="row-editor" key={index}>
+                  <input aria-label="ID" placeholder="ID" value={row.id} onChange={(event) => updateRow(index, { id: event.target.value })} />
+                  <select aria-label="Ação" value={row.action} onChange={(event) => updateRow(index, { action: event.target.value as TreatmentRow["action"] })}>
+                    <option value="fill">Aterrar</option>
+                    <option value="suspend">Suspender</option>
+                    <option value="cancel">Cancelar</option>
+                  </select>
+                  <input aria-label="Preencher metros" title="Preencher (m)" placeholder="Aterrar (m)" type="number" min="0" step="0.1" value={row.fillMeters} onChange={(event) => updateRow(index, { fillMeters: event.target.value === "" ? "" : Number(event.target.value) })} />
+                  <input aria-label="Material" placeholder="Material" value={row.material} onChange={(event) => updateRow(index, { material: event.target.value })} />
+                  <input aria-label="Altura" title="Altura (m)" placeholder="Suspender (m)" type="number" min="0" step="0.1" value={row.suspendHeight} onChange={(event) => updateRow(index, { suspendHeight: event.target.value === "" ? "" : Number(event.target.value) })} />
+                  <input aria-label="Carregar somente metros" title={appConfig.labels.loadOnlyMeters} placeholder="Carregar somente (m)" type="number" min="0" step="0.1" value={row.loadOnlyMeters} onChange={(event) => updateRow(index, { loadOnlyMeters: event.target.value === "" ? "" : Number(event.target.value) })} />
+                  <input aria-label="Tampão personalizado metros" title={appConfig.labels.customStemmingMeters} placeholder="Tampão personalizado (m)" type="number" min="0" step="0.1" value={row.customStemmingMeters} onChange={(event) => updateRow(index, { customStemmingMeters: event.target.value === "" ? "" : Number(event.target.value) })} />
+                  <button type="button" className="icon-button" aria-label="Remover" onClick={() => setRows(rows.filter((_, rowIndex) => rowIndex !== index))}>
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="actions">
