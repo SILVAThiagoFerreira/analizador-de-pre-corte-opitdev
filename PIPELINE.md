@@ -3,7 +3,7 @@
 1. Usuario abre a SPA no GitHub Pages.
 2. Aplicacao carrega `public/examples/PC.dxf`.
 3. `src/dxf.ts` valida e converte entidades DXF em segmentos, textos, pontos, camadas e limites.
-4. `src/App.tsx` popula painel de tratativas e renderiza a lamina.
+4. `src/App.tsx` popula o painel de tratativas, seleciona `PRÉ-CORTE` ou `FACE` e renderiza a lâmina com as metragens de carregar somente e tampão personalizado.
 5. `src/DxfPreview.tsx` desenha a geometria em SVG.
 6. `src/reportExport.ts` captura a lamina com `html2canvas` e exporta PNG ou PDF com `jspdf`.
 7. `npm run validate` executa testes e build.

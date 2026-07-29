@@ -1,5 +1,13 @@
 export const appConfig = {
-  appName: "ANALIZADOR DE PRÉ-CORTE - OPITDEV",
+  appName: "ANALIZADOR DE FUROS - OPITDEV",
+  analysisTypes: ["PRÉ-CORTE", "FACE"],
+  labels: {
+    analysisType: "Tipo de análise",
+    analysisId: "Identificação",
+    panelTitle: "Gerador de lâmina de furos",
+    loadOnlyMeters: "CARREGAR SOMENTE (m)",
+    customStemmingMeters: "TAMPÃO PERSONALIZADO (m)"
+  },
   defaultDxfUrl: `${import.meta.env.BASE_URL}examples/PC.dxf`,
   logoDark: `${import.meta.env.BASE_URL}assets/enaex-brasil.png`,
   logoWhite: `${import.meta.env.BASE_URL}assets/enaex-brasil-white.png`,

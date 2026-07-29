@@ -2,10 +2,12 @@
 
 ## Entregue
 
-- Criar sistema `ANALIZADOR DE PRE-CORTE - OPITDEV`.
+- Criar sistema `ANALIZADOR DE FUROS - OPITDEV`.
 - Usar ativos da pasta `VISUAL`.
 - Incluir `PC.dxf` como exemplo inicial.
 - Fornecer painel de configuracao de tratativas.
+- Permitir selecionar `PRÉ-CORTE` ou `FACE` para a identificação apresentada na lâmina.
+- Incluir as colunas `CARREGAR SOMENTE (m)` e `TAMPÃO PERSONALIZADO (m)` no editor e na lâmina exportada.
 - Exportar lamina em imagem e PDF.
 - Publicar em repositorio GitHub com GitHub Pages via branch `gh-pages`.
 

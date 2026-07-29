@@ -5,10 +5,12 @@ import { DxfPreview } from "./DxfPreview";
 import { makeDefaultTreatments, parseDxf } from "./dxf";
 import { exportElementAsPdf, exportElementAsPng } from "./reportExport";
 import type { DxfModel, ReportSettings, TreatmentRow } from "./types";
+import { createTreatmentRow, formatMeters } from "./treatments";
 import "./styles.css";
 
 const initialSettings: ReportSettings = {
-  precutId: "380726",
+  analysisType: "PRÉ-CORTE",
+  analysisId: "380726",
   title: "Relatório de Tratativas para Furos Perfilados",
   includeOpenBlast: true,
   generatedBy: "Setor Técnico de Operações",
@@ -17,19 +19,19 @@ const initialSettings: ReportSettings = {
 };
 
 const initialRows: TreatmentRow[] = [
-  { id: "26", action: "fill", fillMeters: 2, material: "", suspendHeight: "" },
-  { id: "99", action: "fill", fillMeters: 3, material: "", suspendHeight: "" },
-  { id: "103", action: "cancel", fillMeters: "", material: "", suspendHeight: "" }
+  { ...createTreatmentRow(), id: "26", fillMeters: 2 },
+  { ...createTreatmentRow(), id: "99", fillMeters: 3 },
+  { ...createTreatmentRow(), id: "103", action: "cancel" }
 ];
 
 function fileStem(value: string) {
-  return value.trim().replace(/[^\w.-]+/g, "-").replace(/-+/g, "-") || "pre-corte";
+  return value.trim().replace(/[^\w.-]+/g, "-").replace(/-+/g, "-") || "furos";
 }
 
 function rowActionLabel(row: TreatmentRow) {
   if (row.action === "cancel") return "CANCELAR";
-  if (row.action === "suspend") return row.suspendHeight ? `${row.suspendHeight}m` : "";
-  return row.fillMeters ? `${row.fillMeters}m` : "";
+  if (row.action === "suspend") return formatMeters(row.suspendHeight);
+  return formatMeters(row.fillMeters);
 }
 
 export default function App() {
@@ -92,7 +94,7 @@ export default function App() {
   async function exportReport(kind: "png" | "pdf") {
     if (!reportRef.current) return;
     setBusy(true);
-    const name = `lamina-pre-corte-${fileStem(settings.precutId)}`;
+    const name = `lamina-furos-${fileStem(settings.analysisType)}-${fileStem(settings.analysisId)}`;
     const previousTransform = reportRef.current.style.transform;
     reportRef.current.style.transform = "none";
     try {
@@ -119,7 +121,7 @@ export default function App() {
           <div className="panel-title">
             <div>
               <span className="kicker">OPITDEV</span>
-              <h1>Gerador de lâmina de pré-corte</h1>
+              <h1>{appConfig.labels.panelTitle}</h1>
             </div>
             <span className="status-dot">Online</span>
           </div>
@@ -135,8 +137,14 @@ export default function App() {
 
           <div className="form-grid">
             <label>
-              Pré-corte
-              <input value={settings.precutId} onChange={(event) => setSettings({ ...settings, precutId: event.target.value })} />
+              {appConfig.labels.analysisType}
+              <select value={settings.analysisType} onChange={(event) => setSettings({ ...settings, analysisType: event.target.value as ReportSettings["analysisType"] })}>
+                {appConfig.analysisTypes.map((analysisType) => <option key={analysisType} value={analysisType}>{analysisType}</option>)}
+              </select>
+            </label>
+            <label>
+              {settings.analysisType}
+              <input value={settings.analysisId} onChange={(event) => setSettings({ ...settings, analysisId: event.target.value })} />
             </label>
             <label>
               Título
@@ -157,21 +165,23 @@ export default function App() {
           <div className="table-editor">
             <div className="table-editor__head">
               <h2>Tratativas</h2>
-              <button type="button" onClick={() => setRows([...rows, { id: "", action: "fill", fillMeters: "", material: "", suspendHeight: "" }])}>
+              <button type="button" onClick={() => setRows([...rows, createTreatmentRow()])}>
                 <Plus size={16} /> Adicionar
               </button>
             </div>
             {rows.map((row, index) => (
               <div className="row-editor" key={index}>
-                <input aria-label="ID" value={row.id} onChange={(event) => updateRow(index, { id: event.target.value })} />
-                <select value={row.action} onChange={(event) => updateRow(index, { action: event.target.value as TreatmentRow["action"] })}>
+                <input aria-label="ID" placeholder="ID" value={row.id} onChange={(event) => updateRow(index, { id: event.target.value })} />
+                <select aria-label="Ação" value={row.action} onChange={(event) => updateRow(index, { action: event.target.value as TreatmentRow["action"] })}>
                   <option value="fill">Aterrar</option>
                   <option value="suspend">Suspender</option>
                   <option value="cancel">Cancelar</option>
                 </select>
-                <input aria-label="Preencher metros" type="number" min="0" step="0.1" value={row.fillMeters} onChange={(event) => updateRow(index, { fillMeters: event.target.value === "" ? "" : Number(event.target.value) })} />
-                <input aria-label="Material" value={row.material} onChange={(event) => updateRow(index, { material: event.target.value })} />
-                <input aria-label="Altura" type="number" min="0" step="0.1" value={row.suspendHeight} onChange={(event) => updateRow(index, { suspendHeight: event.target.value === "" ? "" : Number(event.target.value) })} />
+                <input aria-label="Preencher metros" title="Preencher (m)" placeholder="Aterrar (m)" type="number" min="0" step="0.1" value={row.fillMeters} onChange={(event) => updateRow(index, { fillMeters: event.target.value === "" ? "" : Number(event.target.value) })} />
+                <input aria-label="Material" placeholder="Material" value={row.material} onChange={(event) => updateRow(index, { material: event.target.value })} />
+                <input aria-label="Altura" title="Altura (m)" placeholder="Suspender (m)" type="number" min="0" step="0.1" value={row.suspendHeight} onChange={(event) => updateRow(index, { suspendHeight: event.target.value === "" ? "" : Number(event.target.value) })} />
+                <input aria-label="Carregar somente metros" title={appConfig.labels.loadOnlyMeters} placeholder="Carregar (m)" type="number" min="0" step="0.1" value={row.loadOnlyMeters} onChange={(event) => updateRow(index, { loadOnlyMeters: event.target.value === "" ? "" : Number(event.target.value) })} />
+                <input aria-label="Tampão personalizado metros" title={appConfig.labels.customStemmingMeters} placeholder="Tampão (m)" type="number" min="0" step="0.1" value={row.customStemmingMeters} onChange={(event) => updateRow(index, { customStemmingMeters: event.target.value === "" ? "" : Number(event.target.value) })} />
                 <button type="button" className="icon-button" aria-label="Remover" onClick={() => setRows(rows.filter((_, rowIndex) => rowIndex !== index))}>
                   <Trash2 size={16} />
                 </button>
@@ -202,7 +212,7 @@ export default function App() {
             <div className="report-head">
               <div>
                 <h2>{settings.title}</h2>
-                <p>PRE-CORTE: {settings.precutId}</p>
+                <p>{settings.analysisType}: {settings.analysisId}</p>
               </div>
               <img src={appConfig.logoReport} alt="Enaex Stronger Bonds" />
             </div>
@@ -229,6 +239,8 @@ export default function App() {
                       <th>PREENCHER (m)<br />(ATERRAR)</th>
                       <th>MATERIAL<br />(ATERRAR)</th>
                       <th>ALTURA (m)<br />(SUSPENDER)</th>
+                      <th>{appConfig.labels.loadOnlyMeters}</th>
+                      <th>{appConfig.labels.customStemmingMeters}</th>
                       <th>CANCELAR FURO</th>
                     </tr>
                   </thead>
@@ -239,6 +251,8 @@ export default function App() {
                         <td>{row.action === "fill" ? rowActionLabel(row) : ""}</td>
                         <td>{row.action === "fill" ? row.material : ""}</td>
                         <td>{row.action === "suspend" ? rowActionLabel(row) : ""}</td>
+                        <td>{formatMeters(row.loadOnlyMeters)}</td>
+                        <td>{formatMeters(row.customStemmingMeters)}</td>
                         <td>{row.action === "cancel" ? "CANCELAR" : ""}</td>
                       </tr>
                     ))}

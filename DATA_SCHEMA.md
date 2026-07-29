@@ -16,10 +16,13 @@
 - `fillMeters`: metragem para aterro.
 - `material`: material de aterro.
 - `suspendHeight`: altura de suspensao.
+- `loadOnlyMeters`: metragem opcional para carregar somente, em metros.
+- `customStemmingMeters`: metragem opcional de tampão personalizado, em metros.
 
 ## ReportSettings
 
-- `precutId`: identificador do pre-corte.
+- `analysisType`: tipo de análise, `PRÉ-CORTE` ou `FACE`.
+- `analysisId`: identificador da análise selecionada.
 - `title`: titulo da lamina.
 - `includeOpenBlast`: reservado para exibicao de marca complementar.
 - `generatedBy`: responsavel exibido no painel.

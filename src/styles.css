@@ -106,13 +106,12 @@ input:focus, select:focus, button:focus-visible { outline: 2px solid rgba(237, 2
 .actions .primary { background: #ed1c24; border-color: #ed1c24; color: #fff; }
 .row-editor {
   display: grid;
-  grid-template-columns: 52px minmax(108px, 1fr) 58px 42px 38px 34px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
   margin-top: 8px;
 }
 .row-editor input, .row-editor select { min-height: 34px; padding: 6px 8px; }
-.row-editor input[aria-label="Material"] { width: 42px; }
-.row-editor input[aria-label="Altura"] { width: 38px; }
+.row-editor input::placeholder { color: #7b8790; opacity: 1; font-size: 11px; }
 .icon-button { padding: 0 !important; }
 .actions { margin-top: 18px; justify-content: flex-end; }
 
@@ -169,7 +168,7 @@ input:focus, select:focus, button:focus-visible { outline: 2px solid rgba(237, 2
   border-collapse: collapse;
   table-layout: fixed;
   margin-top: 8px;
-  font-size: 16px;
+  font-size: 14px;
 }
 .treatment-report th {
   background: #1f5f3a;

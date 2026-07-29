@@ -1,4 +1,5 @@
 export type TreatmentAction = "fill" | "suspend" | "cancel";
+export type AnalysisType = "PRÉ-CORTE" | "FACE";
 
 export interface TreatmentRow {
   id: string;
@@ -6,10 +7,13 @@ export interface TreatmentRow {
   fillMeters: number | "";
   material: string;
   suspendHeight: number | "";
+  loadOnlyMeters: number | "";
+  customStemmingMeters: number | "";
 }
 
 export interface ReportSettings {
-  precutId: string;
+  analysisType: AnalysisType;
+  analysisId: string;
   title: string;
   includeOpenBlast: boolean;
   generatedBy: string;
