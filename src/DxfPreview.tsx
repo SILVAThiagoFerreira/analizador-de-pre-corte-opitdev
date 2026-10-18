@@ -21,31 +21,28 @@ export function DxfPreview({ model, mode, showLabels = false, rotationDegrees = 
   const displayCenterY = minY + maxY - centerY;
   const viewRotation = rotationDegrees ? `rotate(${rotationDegrees} ${centerX} ${displayCenterY})` : undefined;
   const angle = (rotationDegrees * Math.PI) / 180;
-  const corners = [
-    { x: minX, y: minY },
-    { x: maxX, y: minY },
-    { x: maxX, y: maxY },
-    { x: minX, y: maxY }
-  ].map((point) => {
-    const dx = point.x - centerX;
-    const dy = point.y - displayCenterY;
-    return {
-      x: centerX + dx * Math.cos(angle) - dy * Math.sin(angle),
-      y: displayCenterY + dx * Math.sin(angle) + dy * Math.cos(angle)
-    };
-  });
-  const rotatedMinX = Math.min(...corners.map((point) => point.x));
-  const rotatedMaxX = Math.max(...corners.map((point) => point.x));
-  const rotatedMinY = Math.min(...corners.map((point) => point.y));
-  const rotatedMaxY = Math.max(...corners.map((point) => point.y));
-  const viewMinX = rotationDegrees ? rotatedMinX : minX;
-  const viewMaxX = rotationDegrees ? rotatedMaxX : maxX;
-  const viewMinY = rotationDegrees ? rotatedMinY : minY;
-  const viewMaxY = rotationDegrees ? rotatedMaxY : maxY;
+  // Limites reais do desenho (em coordenadas de exibição, já espelhadas em Y),
+  // girados em torno do centro quando há rotação.
+  const rotatePoint = (x: number, y: number) => {
+    const dx = x - centerX;
+    const dy = y - displayCenterY;
+    return { x: centerX + dx * Math.cos(angle) - dy * Math.sin(angle), y: displayCenterY + dx * Math.sin(angle) + dy * Math.cos(angle) };
+  };
+  const drawnPoints = [
+    ...model.segments.flatMap((segment) => segment.points),
+    ...model.points.map((item) => item.point)
+  ].map((point) => rotatePoint(point.x, minY + maxY - point.y));
+  const pointsX = drawnPoints.length ? drawnPoints.map((point) => point.x) : [minX, maxX];
+  const pointsY = drawnPoints.length ? drawnPoints.map((point) => point.y) : [minY, maxY];
+  const viewMinX = Math.min(...pointsX);
+  const viewMaxX = Math.max(...pointsX);
+  const viewMinY = Math.min(...pointsY);
+  const viewMaxY = Math.max(...pointsY);
   const viewWidth = Math.max(viewMaxX - viewMinX, 1);
   const viewHeight = Math.max(viewMaxY - viewMinY, 1);
-  const padX = viewWidth * (mode === "overview" ? 0.08 : 0.10);
-  const padY = viewHeight * (mode === "overview" ? 0.12 : 0.12);
+  // Margem pequena: o desenho ocupa a moldura inteira, sem vazios em volta.
+  const padX = viewWidth * 0.03;
+  const padY = viewHeight * 0.03;
   const viewBox = `${viewMinX - padX} ${viewMinY - padY} ${viewWidth + padX * 2} ${viewHeight + padY * 2}`;
 
   return (
