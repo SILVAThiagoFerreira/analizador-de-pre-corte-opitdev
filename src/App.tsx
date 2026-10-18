@@ -110,10 +110,8 @@ export default function App() {
     <>
       <header className="topbar">
         <img src={appConfig.logoWhite} alt="Enaex Brasil" />
-        <div>
-          <strong>{appConfig.appName}</strong>
-          <span>US Vale Verde</span>
-        </div>
+        <strong>{appConfig.appName}</strong>
+        <span>US Vale Verde</span>
       </header>
 
       <main className="workspace">
