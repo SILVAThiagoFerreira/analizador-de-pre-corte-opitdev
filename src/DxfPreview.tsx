@@ -50,12 +50,6 @@ export function DxfPreview({ model, mode, showLabels = false, rotationDegrees = 
 
   return (
     <svg className={`dxf-svg dxf-svg--${mode}`} viewBox={viewBox} role="img" aria-label={`Visualizacao ${mode} do DXF`}>
-      <defs>
-        <pattern id={`grid-${mode}`} width={width / 12} height={height / 8} patternUnits="userSpaceOnUse">
-          <path d={`M ${width / 12} 0 L 0 0 0 ${height / 8}`} fill="none" stroke="#e9edf0" strokeWidth={Math.max(width, height) * 0.0006} />
-        </pattern>
-      </defs>
-      <rect x={viewMinX - padX} y={viewMinY - padY} width={viewWidth + padX * 2} height={viewHeight + padY * 2} fill={`url(#grid-${mode})`} />
       <g transform={viewRotation}>
       <g transform={`translate(0 ${minY + maxY}) scale(1 -1)`}>
         {model.segments.map((segment, index) => (
@@ -71,7 +65,7 @@ export function DxfPreview({ model, mode, showLabels = false, rotationDegrees = 
           />
         ))}
         {model.points.map((item, index) => (
-          <circle key={`${item.layer}-pt-${index}`} cx={item.point.x} cy={item.point.y} r={Math.max(width, height) * 0.0035} fill={item.layer.includes("Real") ? "#c73e2b" : "#1e36c9"} />
+          <circle key={`${item.layer}-pt-${index}`} cx={item.point.x} cy={item.point.y} r={Math.max(width, height) * 0.0035} fill={item.layer.includes("Real") ? "#b5121b" : "#3d4148"} />
         ))}
       </g>
       {showLabels &&
@@ -81,7 +75,7 @@ export function DxfPreview({ model, mode, showLabels = false, rotationDegrees = 
             x={text.point.x}
             y={minY + maxY - text.point.y}
             fontSize={Math.max(width, height) * 0.012}
-            fill="#24323d"
+            fill="#3d4148"
             textAnchor="middle"
           >
             {text.value}
